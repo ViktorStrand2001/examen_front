@@ -20,6 +20,7 @@ const config = {
     extend: {
       backgroundImage: {
         "moose-hero": "url('/login_background.jpg')",
+        "fireplace-hero": "url('/register_bakground.png')",
       },
       colors: {
         brown: "",

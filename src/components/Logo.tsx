@@ -5,9 +5,11 @@ import { cn } from "@/lib/utils"
 interface LogoProps {
   classNameImg?: string
   classNameText?: string
+  classNameFristT?: string
+  classNameSecondT?: string
 }
 
-const logo: FC<LogoProps> = ({classNameImg, classNameText}) => {
+const logo: FC<LogoProps> = ({classNameImg, classNameText, classNameFristT, classNameSecondT}) => {
   return (
     <div className="flex">
       <div className="flex items-center">
@@ -19,8 +21,9 @@ const logo: FC<LogoProps> = ({classNameImg, classNameText}) => {
           className={cn(classNameImg)}
         />
         <p className={cn("font-bold text-2xl", classNameText)}>
-          <span className="text-green-900">T</span>eam
-          <span className="text-amber-950">T</span>racker
+          <span className={cn("text-green-500", classNameFristT)}>T</span>eam
+          <span className={cn("text-green-500", classNameSecondT)}>T</span>
+          racker
         </p>
       </div>
     </div>

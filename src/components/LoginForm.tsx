@@ -3,6 +3,8 @@ import { FC, FormEvent, useEffect, useState } from "react"
 import { login } from "@/app/api/login"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import Logo from "./Logo"
+import { cn } from "@/lib/utils"
 
 interface LoginProps {}
 
@@ -13,6 +15,12 @@ const Login: FC<LoginProps> = ({}) => {
 
   // Move the useRouter call inside the component
   const router = useRouter()
+
+  const isRegistrationDisabled = () => {
+    const isInvalidPassword = password.length <= 8
+    const isInvalidUsername = username.trim() === ""
+    return isInvalidPassword || isInvalidUsername
+  }
 
   // Handle login form submission
   const handleSubmit = async (event: FormEvent) => {
@@ -32,25 +40,16 @@ const Login: FC<LoginProps> = ({}) => {
       setError(null)
       console.log("Authentication successful. Token:", authToken)
       console.log(localStorage)
-
-      // Use router to navigate to the home page
       router.push("/")
     } else {
       setError(error || "An unexpected error occurred")
     }
   }
-
-  // Check for existing token on component mount
-  useEffect(() => {
-    if (typeof window !== "undefined" && localStorage.getItem("token")) {
-      // Optional: Redirect to home page if the token exists on component mount
-      router.push("/")
-    }
-  }, [router])
   return (
     <div className="min-h-screen min-w-100 flex items-center justify-center overflow-hidden">
       <div className="backdrop-blur-lg bg-white/30 p-8 rounded-md shadow-md w-96">
-        <form onSubmit={handleSubmit} className="w-full">
+        <Logo />
+        <form onSubmit={handleSubmit} className="w-full mt-4">
           <label
             htmlFor="username"
             className="block text-sm font-medium text-black"
@@ -80,18 +79,26 @@ const Login: FC<LoginProps> = ({}) => {
           {error && (
             <p className="text-red-500 mt-2">Wrong username or Password</p>
           )}
-
-          <button
-            type="submit"
-            className="mt-4 bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 w-full"
-          >
-            Login
-          </button>
+          <div className="w-full flex justify-center items-center">
+            <button
+              type="submit"
+              className={cn('mt-4 py-2 px-4 rounded w-44',
+                {
+                  'bg-gray-400': isRegistrationDisabled(),
+                  'bg-green-500 hover:bg-green-600': !isRegistrationDisabled(),
+                  'cursor-not-allowed': isRegistrationDisabled(),
+                }
+              )}
+              disabled={isRegistrationDisabled()} // Disable the button based on validation
+            >
+              Login
+            </button>
+          </div>
           <div className="flex justify-center space-x-1 mt-2">
             <p>No account?</p>
             <Link
               href={"/register"}
-              className="text-blue-400 hover:text-blue-800"
+              className="text-blue-500 hover:text-blue-800"
             >
               Register!
             </Link>

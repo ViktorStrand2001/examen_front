@@ -1,9 +1,11 @@
+const apiUrl = "http://localhost:8080"
+
 export const login = async (formData: {
   username: string
   password: string
 }) => {
   try {
-    const response = await fetch("http://localhost:8080/login", {
+    const response = await fetch(`${apiUrl}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

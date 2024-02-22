@@ -12,13 +12,14 @@ import {
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
+import Logo from "./Logo"
 
 interface HamburgerMenuProps {}
 
 const HamburgerMenu: FC<HamburgerMenuProps> = ({}) => {
   const [isOpen, setIsOpen] = useState(false)
   const [isLogin, setIsLogim] = useState(false)
-  const tokenExists = !!localStorage.getItem("token")
+  const tokenExists = localStorage.getItem("token")
 
   const handleLogout = () => {
     localStorage.removeItem("token")
@@ -31,8 +32,10 @@ const HamburgerMenu: FC<HamburgerMenuProps> = ({}) => {
       <div className="bg-gradient-to-r from-green-700 to-[#593a0e]">
         <MaxWidthWrapper>
           <div className="flex items-center h-20 relative">
-            <Image src={"web_icon.svg"} alt={"logo"} width={60} height={50} />
-            <p className="text-xl font-bold">TeamTracker</p>
+            <Logo
+              classNameFristT="text-amber-800"
+              classNameSecondT="text-amber-800"
+            />
             <div className="absolute right-0">
               <div className="flex items-center overflow-hidden space-x-4">
                 <button onClick={() => setIsOpen(!isOpen)}>
