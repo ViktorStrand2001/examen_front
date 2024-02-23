@@ -1,90 +1,223 @@
 "use client"
-import Image from "next/image"
 import { FC, useState } from "react"
 import MaxWidthWrapper from "./MaxWidthWrapper"
 import {
   CircleUser,
+  CircleUserIcon,
+  HeadsetIcon,
+  HelpCircleIcon,
+  HomeIcon,
   LogIn,
-  LogOut,
+  LogOutIcon,
   Menu,
-  Settings,
+  MessageCircleIcon,
+  PlusSquareIcon,
   X,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 import Logo from "./Logo"
 
-interface HamburgerMenuProps {}
-
-const HamburgerMenu: FC<HamburgerMenuProps> = ({}) => {
+const HamburgerMenu: FC = ({}) => {
   const [isOpen, setIsOpen] = useState(false)
-  const [isLogin, setIsLogim] = useState(false)
   const tokenExists = localStorage.getItem("token")
+  const [, updateState] = useState({})
 
   const handleLogout = () => {
-    localStorage.removeItem("token")
-    localStorage.removeItem("username")
-    console.log(localStorage)
+    const confirmLogout = window.confirm("Are you sure you want to log out?")
+
+    if (confirmLogout) {
+      const forceUpdate = () => updateState({})
+      localStorage.removeItem("token")
+      localStorage.removeItem("username")
+      console.log(localStorage)
+      forceUpdate()
+    }
   }
 
   return (
-    <div className="min-w-full min-h-20 overflow-hidden">
-      <div className="bg-gradient-to-r from-green-700 to-[#593a0e]">
-        <MaxWidthWrapper>
-          <div className="flex items-center h-20 relative">
-            <Logo
-              classNameFristT="text-amber-800"
-              classNameSecondT="text-amber-800"
-            />
-            <div className="absolute right-0">
-              <div className="flex items-center overflow-hidden space-x-4">
-                <button onClick={() => setIsOpen(!isOpen)}>
-                  <CircleUser size={30} className="text-white" />
-                </button>
-                <button
-                  onClick={() => setIsOpen(!isOpen)}
-                  className={cn("text-white", isOpen ? "hidden" : "block")}
+    <div className="w-full h-20 lg:w-60 lg:h-screen lg:flex bg-gradient-to-r from-[#593a0e] to-green-900 lg:bg-gradient-to-t lg:to-[#593a0e] lg:from-green-900">
+      <MaxWidthWrapper className="h-full flex items-center lg:items-start">
+        <div className="relative w-full flex items-center">
+          <div className="lg:flex flex-col lg:h-screen lg:mt-2.5">
+            <Logo />
+            <div className="hidden lg:flex h-full mt-14 pl-6 text-white">
+              <nav className="flex flex-col space-y-10 reletive">
+                <Link
+                  className="flex items-center flex-row space-x-2 hover:text-green-500"
+                  href={"http://localhost:3000/"}
                 >
-                  <Menu size={40} />
+                  <HomeIcon size={30} />
+                  <p className="ml-2">Home</p>
+                </Link>
+                <Link
+                  className="flex items-center flex-row space-x-2 hover:text-green-500"
+                  href={"http://localhost:3000/message"}
+                >
+                  <MessageCircleIcon size={30} />
+                  <p className="ml-2">Messages</p>
+                </Link>
+                <Link
+                  className="flex items-center flex-row space-x-2 hover:text-green-500"
+                  href={"http://localhost:3000/createPost"}
+                >
+                  <PlusSquareIcon size={30} />
+                  <p className="ml-2">Post</p>
+                </Link>
+                {!tokenExists ? (
+                  <>
+                    <Link
+                      className="flex flex-row items-center space-x-2 hover:text-green-500"
+                      href={"http://localhost:3000/login"}
+                    >
+                      <LogOutIcon size={30} />
+                      <p className="ml-2">Login</p>
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      className="flex flex-row items-center space-x-2 hover:text-green-500"
+                      href={"http://localhost:3000/profile"}
+                    >
+                      <CircleUserIcon size={30} />
+                      <p className="ml-2">Profile</p>
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="flex flex-row items-center space-x-2 hover:text-green-500"
+                    >
+                      <LogIn size={30} />
+                      <p className="ml-2">Logout</p>
+                    </button>
+                  </>
+                )}
+
+                <div className="absolute bottom-10">
+                  <Link
+                    className="flex flex-row items-center space-x-2 bottom-10 hover:text-green-500"
+                    href={"http://localhost:3000/support"}
+                  >
+                    <HeadsetIcon size={30} />
+                    <p className="ml-2">Support</p>
+                  </Link>
+                  <Link
+                    className="flex flex-row items-center space-x-2 absolute bottom-10 hover:text-green-500"
+                    href={"http://localhost:3000/about"}
+                  >
+                    <HelpCircleIcon size={30} />
+                    <p className="ml-2">About</p>
+                  </Link>
+                </div>
+              </nav>
+            </div>
+          </div>
+          <div className="absolute right-0 lg:hidden">
+            <div className="flex items-center space-x-4 text-white ">
+              {tokenExists ? (
+                <>
+                  <Link href={"http://localhost:3000/profile"}>
+                    <CircleUser size={30} className="hover:text-green-500" />
+                  </Link>
+                </>
+              ) : (
+                <>
+                  {" "}
+                  <Link href={"http://localhost:3000/login"}>
+                    <p className="hover:text-green-500">Login</p>
+                  </Link>
+                </>
+              )}
+
+              <div className="flex items-center">
+                <button
+                  className={cn(
+                    "hover:text-green-500",
+                    isOpen ? "hidden" : "block"
+                  )}
+                  onClick={() => setIsOpen(true)}
+                >
+                  <Menu size={35} />
                 </button>
                 <button
+                  className={cn(
+                    "hover:text-green-500",
+                    !isOpen ? "hidden" : "block"
+                  )}
                   onClick={() => setIsOpen(false)}
-                  className={cn("text-white", !isOpen ? "hidden" : "block")}
                 >
-                  <X size={40} />
+                  <X size={35} />
                 </button>
               </div>
             </div>
           </div>
-        </MaxWidthWrapper>
-      </div>
+        </div>
+      </MaxWidthWrapper>
       {isOpen ? (
-        <div className="bg-white p-4 absolute min-w-full">
-          <div className="flex flex-col space-y-4">
-            <div className="flex">
-              <button className="flex items-center">
-                <Settings size={30} />
-                <span className="ml-2">Profile Settings</span>
-              </button>
-            </div>
-            <div className="flex">
-              {tokenExists ? (
-                <button className="flex items-center" onClick={handleLogout}>
-                  <LogOut size={30} />
-                  <span className="ml-2">Logout</span>
-                </button>
-              ) : (
+        <>
+          <div className="w-full h-[200px] bg-gradient-to-r from-[#593a0e] to-green-900 bg-opacity-50 text-white absolute border-t border-black">
+            <div className="flex justify-center items-center h-full">
+              <nav className="grid grid-cols-3 gap-10 justify-center items-center ">
                 <Link
-                  className="flex items-center"
-                  href={"http://localhost:3000/login"}
+                  className="flex items-center hover:text-green-500"
+                  href={"http://localhost:3000/"}
                 >
-                  <LogIn size={30} />
-                  <span className="ml-2">Login</span>
+                  <HomeIcon size={30} />
+                  <p className="ml-2">Home</p>
                 </Link>
-              )}
+                <Link
+                  className="flex items-center hover:text-green-500"
+                  href={"http://localhost:3000/message"}
+                >
+                  <MessageCircleIcon size={30} />
+                  <p className="ml-2">Messages</p>
+                </Link>
+                <Link
+                  href={"http://localhost:3000/createPost"}
+                  className="flex items-center hover:text-green-500"
+                >
+                  <PlusSquareIcon size={30} />
+                  <p className="ml-2">Post</p>
+                </Link>
+                {!tokenExists ? (
+                  <>
+                    <Link
+                      href={"http://localhost:3000/login"}
+                      className="flex items-center hover:text-green-500"
+                    >
+                      <LogOutIcon size={30} />
+                      <p className="ml-2">Login</p>
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center hover:text-green-500"
+                    >
+                      <LogIn size={30} />
+                      <p className="ml-2">Logout</p>
+                    </button>
+                  </>
+                )}
+                <Link
+                  href={"http://localhost:3000/support"}
+                  className="flex items-center hover:text-green-500 "
+                >
+                  <HeadsetIcon size={30} />
+                  <p className="ml-2">Support</p>
+                </Link>
+                <Link
+                  href={"http://localhost:3000/about"}
+                  className="flex items-center hover:text-green-500"
+                >
+                  <HelpCircleIcon size={30} />
+                  <p className="ml-2">About</p>
+                </Link>
+              </nav>
             </div>
           </div>
-        </div>
+        </>
       ) : null}
     </div>
   )

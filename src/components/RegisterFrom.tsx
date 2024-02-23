@@ -102,7 +102,8 @@ const RegisterFrom: FC = () => {
               type="submit"
               className={cn("mt-4 py-2 px-4 rounded w-44", {
                 "bg-gray-400": isRegistrationDisabled(),
-                "bg-blue-500 hover:bg-blue-600": !isRegistrationDisabled(),
+                "bg-gradient-to-r to-[#593a0e] from-green-700 hover:from-green-900 hover:to-[#593a0e] text-white":
+                  !isRegistrationDisabled(),
                 "cursor-not-allowed": isRegistrationDisabled(),
               })}
               disabled={isRegistrationDisabled()}

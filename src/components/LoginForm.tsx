@@ -81,17 +81,24 @@ const Login: FC<LoginProps> = ({}) => {
           <div className="w-full flex justify-center items-center">
             <button
               type="submit"
-              className={cn('mt-4 py-2 px-4 rounded w-44',
-                {
-                  'bg-gray-400': isRegistrationDisabled(),
-                  'bg-green-500 hover:bg-green-600': !isRegistrationDisabled(),
-                  'cursor-not-allowed': isRegistrationDisabled(),
-                }
-              )}
+              className={cn("mt-4 py-2 px-4 rounded w-44", {
+                "bg-gray-400": isRegistrationDisabled(),
+                "bg-gradient-to-r to-[#593a0e] from-green-700 hover:from-green-900 hover:to-[#593a0e] text-white":
+                  !isRegistrationDisabled(),
+                "cursor-not-allowed": isRegistrationDisabled(),
+              })}
               disabled={isRegistrationDisabled()} // Disable the button based on validation
             >
               Login
             </button>
+          </div>
+          <div className="w-full flex justify-center items-center">
+            <Link
+              className={cn(
+                "text-center mt-4 py-2 px-4 rounded w-44 bg-gradient-to-r from-[#593a0e] to-green-700 hover:to-green-900 hover:from-[#593a0e] text-white"
+              )} href={"/"}            >
+              Login as guest
+            </Link>
           </div>
           <div className="flex justify-center space-x-1 mt-2">
             <p>No account?</p>
