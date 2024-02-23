@@ -1,23 +1,48 @@
 "use client"
-import Link from 'next/link'
-import { FC, FormEvent, useEffect, useState } from 'react'
-import Logo from './Logo'
-import { register} from '@/app/api/register'
-import { useRouter } from 'next/navigation'
-import { cn } from '@/lib/utils'
+import Link from "next/link"
+import { FC, useState } from "react"
+import Logo from "./Logo"
+import { useRouter } from "next/navigation"
+import { cn } from "@/lib/utils"
+import axios from "axios"
+import { useMutation } from "@tanstack/react-query"
 
-
-
-interface RegisterFromProps {}
-
-const RegisterFrom: FC<RegisterFromProps> = ({ }) => {
+const RegisterFrom: FC = () => {
+  const [username, setUsername] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
+  const [email, setEmail] = useState<string>("")
+  const [errorMessage, setErrorMessage] = useState<string>("")
   const router = useRouter()
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [username, setUsername] = useState("")
-  const [error, setError] = useState<string | null>(null)
+
+  const { mutate, isError } = useMutation({
+    mutationKey: ["registerKey"],
+    mutationFn: async () => {
+      const { data } = await axios.post("http://localhost:8080/register", {
+        username,
+        password,
+        email,
+      })
+      return data
+    },
+    onSuccess: () => {
+      router.push("/login")
+    },
+    onError: (error: Error) => {
+      setErrorMessage(error.message)
+    },
+  })
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    setErrorMessage("")
+    mutate()
+  }
 
   const isRegistrationDisabled = () => {
+    const isValidEmail = (email: string) => {
+      return email.includes("@")
+    }
+
     const isInvalidPassword = password.length < 8
     const isInvalidEmail = !isValidEmail(email)
     const isInvalidUsername = username.trim() === ""
@@ -25,36 +50,11 @@ const RegisterFrom: FC<RegisterFromProps> = ({ }) => {
     return isInvalidPassword || isInvalidEmail || isInvalidUsername
   }
 
-  const isValidEmail = (email: string) => {
-    return email.includes("@")
-  }
-
-  const handleRegistration = async (e: FormEvent) => {
-    e.preventDefault()
-    try {
-      const userData = {
-        email: email,
-        password: password,
-        username: username,
-      }
-
-      const { createdUser } = await register(userData)
-      console.log("User created:", createdUser)
-      router.push("/login")
-      
-    } catch (error: any) {
-      console.error("Failed to create user:", error.message)
-      setError(error.message)
-    }
-  }
-
- 
-
   return (
     <div className="min-h-screen min-w-100 flex items-center justify-center overflow-hidden">
       <div className="backdrop-blur-lg bg-white/30 p-8 rounded-md shadow-md w-96">
         <Logo />
-        <form className="w-full mt-4" onSubmit={handleRegistration}>
+        <form className="w-full mt-4" onSubmit={handleFormSubmit}>
           <label
             htmlFor="username"
             className="block text-sm font-medium text-black"
@@ -91,22 +91,20 @@ const RegisterFrom: FC<RegisterFromProps> = ({ }) => {
             className="mt-1 p-2 w-full border rounded-md"
           />
 
-          {error && (
-            <div className="text-red-500 mt-2">
-              <p>{error}</p>
+          {isError && (
+            <div style={{ color: "red", marginTop: "10px" }}>
+              An error occurred: {errorMessage}
             </div>
           )}
 
           <div className="w-full flex justify-center items-center">
             <button
               type="submit"
-              className={cn('mt-4 py-2 px-4 rounded w-44',
-                {
-                  'bg-gray-400': isRegistrationDisabled(),
-                  'bg-blue-500 hover:bg-blue-600': !isRegistrationDisabled(),
-                  'cursor-not-allowed': isRegistrationDisabled(),
-                }
-              )}
+              className={cn("mt-4 py-2 px-4 rounded w-44", {
+                "bg-gray-400": isRegistrationDisabled(),
+                "bg-blue-500 hover:bg-blue-600": !isRegistrationDisabled(),
+                "cursor-not-allowed": isRegistrationDisabled(),
+              })}
               disabled={isRegistrationDisabled()}
             >
               Register

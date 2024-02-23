@@ -1,50 +1,49 @@
 "use client"
-import { FC, FormEvent, useEffect, useState } from "react"
-import { login } from "@/app/api/login"
+import { FC, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Logo from "./Logo"
 import { cn } from "@/lib/utils"
+import axios from "axios"
+import { useMutation } from "@tanstack/react-query"
 
 interface LoginProps {}
 
 const Login: FC<LoginProps> = ({}) => {
   const [username, setUsername] = useState<string>("")
   const [password, setPassword] = useState<string>("")
-  const [error, setError] = useState<string | null>(null)
-
-  // Move the useRouter call inside the component
   const router = useRouter()
 
+  const { mutate, isError } = useMutation({
+    mutationKey: ["registerKey"],
+    mutationFn: async () => {
+      const { data } = await axios.post("http://localhost:8080/login", {
+        username,
+        password,
+      })
+      return data
+    },
+    onSuccess: (data) => {
+      const authToken = data.token
+      localStorage.setItem("token", authToken)
+      localStorage.setItem("username", username)
+      console.log("Authentication successful. Token:", authToken)
+      console.log(localStorage)
+      router.push("/")
+    },
+  })
+
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault()
+      mutate()
+    }
+
   const isRegistrationDisabled = () => {
-    const isInvalidPassword = password.length <= 8
+    const isInvalidPassword = password.length < 8
     const isInvalidUsername = username.trim() === ""
     return isInvalidPassword || isInvalidUsername
   }
 
-  // Handle login form submission
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault()
-
-    // Define form data
-    const formData = {
-      username,
-      password,
-    }
-
-    const { success, authToken, error } = await login(formData)
-
-    if (success) {
-      localStorage.setItem("token", authToken)
-      localStorage.setItem("username", username)
-      setError(null)
-      console.log("Authentication successful. Token:", authToken)
-      console.log(localStorage)
-      router.push("/")
-    } else {
-      setError(error || "An unexpected error occurred")
-    }
-  }
   return (
     <div className="min-h-screen min-w-100 flex items-center justify-center overflow-hidden">
       <div className="backdrop-blur-lg bg-white/30 p-8 rounded-md shadow-md w-96">
@@ -76,7 +75,7 @@ const Login: FC<LoginProps> = ({}) => {
             className="mt-1 p-2 w-full border rounded-md"
           />
 
-          {error && (
+          {isError && (
             <p className="text-red-500 mt-2">Wrong username or Password</p>
           )}
           <div className="w-full flex justify-center items-center">
