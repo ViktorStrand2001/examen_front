@@ -20,7 +20,8 @@ import Logo from "./Logo"
 
 const HamburgerMenu: FC = ({}) => {
   const [isOpen, setIsOpen] = useState(false)
-  const tokenExists = localStorage.getItem("token")
+  const tokenExists =
+    typeof localStorage !== "undefined" && localStorage.getItem("token")
   const [, updateState] = useState({})
 
   const handleLogout = () => {
@@ -122,7 +123,6 @@ const HamburgerMenu: FC = ({}) => {
                 </>
               ) : (
                 <>
-                  {" "}
                   <Link href={"http://localhost:3000/login"}>
                     <p className="hover:text-green-500">Login</p>
                   </Link>
@@ -155,7 +155,7 @@ const HamburgerMenu: FC = ({}) => {
       </MaxWidthWrapper>
       {isOpen ? (
         <>
-          <div className="w-full h-[200px] bg-gradient-to-r from-[#593a0e] to-green-900 bg-opacity-50 text-white absolute border-t border-black">
+          <div className="w-full h-[200px] bg-gradient-to-r from-[#593a0e] to-green-900 opacity-80 text-white absolute border-t border-black">
             <div className="flex justify-center items-center h-full">
               <nav className="grid grid-cols-3 gap-10 justify-center items-center ">
                 <Link
