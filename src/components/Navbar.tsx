@@ -37,7 +37,7 @@ const HamburgerMenu: FC = ({}) => {
   }
 
   return (
-    <div className="w-full h-20 lg:w-60 lg:h-screen lg:flex bg-gradient-to-r from-[#593a0e] to-green-900 lg:bg-gradient-to-t lg:to-[#593a0e] lg:from-green-900">
+    <div className="w-full h-20 lg:w-60 lg:h-screen lg:flex bg-primaryGreen">
       <MaxWidthWrapper className="h-full flex items-center lg:items-start">
         <div className="relative w-full flex items-center">
           <div className="lg:flex flex-col lg:h-screen lg:mt-2.5">
@@ -45,21 +45,21 @@ const HamburgerMenu: FC = ({}) => {
             <div className="hidden lg:flex h-full mt-14 pl-6 text-white">
               <nav className="flex flex-col space-y-10 reletive">
                 <Link
-                  className="flex items-center flex-row space-x-2 hover:text-green-500"
+                  className="flex items-center flex-row space-x-2 text-primaryBige"
                   href={"http://localhost:3000/"}
                 >
                   <HomeIcon size={30} />
                   <p className="ml-2">Home</p>
                 </Link>
                 <Link
-                  className="flex items-center flex-row space-x-2 hover:text-green-500"
+                  className="flex items-center flex-row space-x-2 text-primaryBige "
                   href={"http://localhost:3000/message"}
                 >
                   <MessageCircleIcon size={30} />
                   <p className="ml-2">Messages</p>
                 </Link>
                 <Link
-                  className="flex items-center flex-row space-x-2 hover:text-green-500"
+                  className="flex items-center flex-row space-x-2 text-primaryBige "
                   href={"http://localhost:3000/createPost"}
                 >
                   <PlusSquareIcon size={30} />
@@ -68,7 +68,7 @@ const HamburgerMenu: FC = ({}) => {
                 {!tokenExists ? (
                   <>
                     <Link
-                      className="flex flex-row items-center space-x-2 hover:text-green-500"
+                      className="flex flex-row items-center space-x-2 text-primaryBige "
                       href={"http://localhost:3000/login"}
                     >
                       <LogOutIcon size={30} />
@@ -78,7 +78,7 @@ const HamburgerMenu: FC = ({}) => {
                 ) : (
                   <>
                     <Link
-                      className="flex flex-row items-center space-x-2 hover:text-green-500"
+                      className="flex flex-row items-center space-x-2 text-primaryBige "
                       href={"http://localhost:3000/profile"}
                     >
                       <CircleUserIcon size={30} />
@@ -86,7 +86,7 @@ const HamburgerMenu: FC = ({}) => {
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="flex flex-row items-center space-x-2 hover:text-green-500"
+                      className="flex flex-row items-center space-x-2 text-primaryBige "
                     >
                       <LogIn size={30} />
                       <p className="ml-2">Logout</p>
@@ -96,14 +96,14 @@ const HamburgerMenu: FC = ({}) => {
 
                 <div className="absolute bottom-10">
                   <Link
-                    className="flex flex-row items-center space-x-2 bottom-10 hover:text-green-500"
+                    className="flex flex-row items-center space-x-2 bottom-10 text-primaryBige "
                     href={"http://localhost:3000/support"}
                   >
                     <HeadsetIcon size={30} />
                     <p className="ml-2">Support</p>
                   </Link>
                   <Link
-                    className="flex flex-row items-center space-x-2 absolute bottom-10 hover:text-green-500"
+                    className="flex flex-row items-center space-x-2 absolute bottom-10 text-primaryBige "
                     href={"http://localhost:3000/about"}
                   >
                     <HelpCircleIcon size={30} />
@@ -118,13 +118,18 @@ const HamburgerMenu: FC = ({}) => {
               {tokenExists ? (
                 <>
                   <Link href={"http://localhost:3000/profile"}>
-                    <CircleUser size={30} className="hover:text-green-500" />
+                    <CircleUser
+                      size={30}
+                      className="text-primaryBige "
+                    />
                   </Link>
                 </>
               ) : (
                 <>
                   <Link href={"http://localhost:3000/login"}>
-                    <p className="hover:text-green-500">Login</p>
+                    <p className="text-primaryBige ">
+                      Login
+                    </p>
                   </Link>
                 </>
               )}
@@ -132,7 +137,7 @@ const HamburgerMenu: FC = ({}) => {
               <div className="flex items-center">
                 <button
                   className={cn(
-                    "hover:text-green-500",
+                    " text-primaryBige",
                     isOpen ? "hidden" : "block"
                   )}
                   onClick={() => setIsOpen(true)}
@@ -141,7 +146,7 @@ const HamburgerMenu: FC = ({}) => {
                 </button>
                 <button
                   className={cn(
-                    "hover:text-green-500",
+                    " text-primaryBige",
                     !isOpen ? "hidden" : "block"
                   )}
                   onClick={() => setIsOpen(false)}
@@ -155,18 +160,18 @@ const HamburgerMenu: FC = ({}) => {
       </MaxWidthWrapper>
       {isOpen ? (
         <>
-          <div className="w-full h-[200px] bg-gradient-to-r from-[#593a0e] to-green-900 opacity-80 text-white absolute border-t border-black">
+          <div className="w-full h-[200px] bg-primaryGreen opacity-90 text-primaryBige absolute">
             <div className="flex justify-center items-center h-full">
               <nav className="grid grid-cols-3 gap-10 justify-center items-center ">
                 <Link
-                  className="flex items-center hover:text-green-500"
+                  className="flex items-center "
                   href={"http://localhost:3000/"}
                 >
                   <HomeIcon size={30} />
                   <p className="ml-2">Home</p>
                 </Link>
                 <Link
-                  className="flex items-center hover:text-green-500"
+                  className="flex items-center "
                   href={"http://localhost:3000/message"}
                 >
                   <MessageCircleIcon size={30} />
@@ -174,7 +179,7 @@ const HamburgerMenu: FC = ({}) => {
                 </Link>
                 <Link
                   href={"http://localhost:3000/createPost"}
-                  className="flex items-center hover:text-green-500"
+                  className="flex items-center "
                 >
                   <PlusSquareIcon size={30} />
                   <p className="ml-2">Post</p>
@@ -183,7 +188,7 @@ const HamburgerMenu: FC = ({}) => {
                   <>
                     <Link
                       href={"http://localhost:3000/login"}
-                      className="flex items-center hover:text-green-500"
+                      className="flex items-center "
                     >
                       <LogOutIcon size={30} />
                       <p className="ml-2">Login</p>
@@ -193,7 +198,7 @@ const HamburgerMenu: FC = ({}) => {
                   <>
                     <button
                       onClick={handleLogout}
-                      className="flex items-center hover:text-green-500"
+                      className="flex items-center "
                     >
                       <LogIn size={30} />
                       <p className="ml-2">Logout</p>
@@ -202,14 +207,14 @@ const HamburgerMenu: FC = ({}) => {
                 )}
                 <Link
                   href={"http://localhost:3000/support"}
-                  className="flex items-center hover:text-green-500 "
+                  className="flex items-center  "
                 >
                   <HeadsetIcon size={30} />
                   <p className="ml-2">Support</p>
                 </Link>
                 <Link
                   href={"http://localhost:3000/about"}
-                  className="flex items-center hover:text-green-500"
+                  className="flex items-center "
                 >
                   <HelpCircleIcon size={30} />
                   <p className="ml-2">About</p>

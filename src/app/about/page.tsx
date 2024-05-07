@@ -1,9 +1,12 @@
+import Navbar from '@/components/Navbar'
 import { NextPage } from 'next'
 
 interface Props {}
 
 const Page: NextPage<Props> = ({}) => {
-  return <div>about</div>
+  return <div>
+    <Navbar/>
+  </div>
 }
 
 export default Page

@@ -23,7 +23,9 @@ const config = {
         "fireplace-hero": "url('/register_bakground.png')",
       },
       colors: {
-        brown: "",
+        primarybg: "#616F39",
+        primaryGreen: "#36622B",
+        primaryBige: "#FBFAD3",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

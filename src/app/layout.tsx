@@ -1,7 +1,6 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import MaxWidthWrapper from "@/components/MaxWidthWrapper"
 import Providers from "@/components/Providers"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -17,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="min-h-100">
+    <html lang="en" className="min-h-full min-w-full bg-primarybg">
       <Providers>
         <body className={inter.className}>{children}</body>
       </Providers>

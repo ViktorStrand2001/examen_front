@@ -1,3 +1,4 @@
+"use client"
 import { FC } from "react"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
@@ -20,9 +21,9 @@ const logo: FC<LogoProps> = ({classNameImg, classNameText, classNameFristT, clas
           height={50}
           className={cn(classNameImg)}
         />
-        <p className={cn("font-bold text-2xl", classNameText)}>
-          <span className={cn("text-green-500", classNameFristT)}>T</span>eam
-          <span className={cn("text-green-500", classNameSecondT)}>T</span>
+        <p className={cn("font-semibold text-2xl", classNameText)}>
+          <span className={cn("text-primaryBige", classNameFristT)}>T</span>eam
+          <span className={cn("text-primaryBige", classNameSecondT)}>T</span>
           racker
         </p>
       </div>
