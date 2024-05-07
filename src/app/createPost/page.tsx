@@ -3,7 +3,7 @@ import MaxWidthWrapper from "@/components/MaxWidthWrapper"
 import HamburgerMenu from "@/components/Navbar"
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
-import { Camera, PlusIcon, X } from "lucide-react"
+import { Camera, CrosshairIcon, MapPinnedIcon, PlusIcon, X } from "lucide-react"
 import { NextPage } from "next"
 import Image from "next/image"
 import { useEffect, useState } from "react"
@@ -12,6 +12,8 @@ import { ref, getDownloadURL, uploadBytes } from "firebase/storage"
 import { collection, addDoc, serverTimestamp } from "firebase/firestore"
 import { jwtDecode } from "jwt-decode"
 import Navbar from "@/components/Navbar"
+import { Button } from "@/components/ui/button"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface Props {}
 
@@ -24,6 +26,8 @@ const Page: NextPage<Props> = ({}) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string>("")
   const [username, setUsername] = useState<string>()
+  const [games, setGames] = useState<boolean>(false)
+
   const idToken: string | null =
     typeof localStorage !== "undefined" ? localStorage.getItem("token") : null
 
@@ -119,45 +123,73 @@ const Page: NextPage<Props> = ({}) => {
     }, 1000)
   }
 
+  const targets = {
+    Älg: false,
+    Rådjur: false,
+    Dovhjort: false,
+    Kronhjort: false,
+  }
+
   return (
     <div className="w-full h-full lg:flex">
+      {!games && (
+        <div className="w-full h-full absolute bg-black bg-transparent/50 z-10 flex justify-center items-center">
+          <ScrollArea className="h-[81%] w-96 rounded-md border bg-primaryBige">
+            <div className="p-4">
+              <div className="flex w-full justify-center reletive mb-10">
+                <CrosshairIcon size={80} className=" absolute" />
+                <Image src={"deer.svg"} alt="viltmål" width={80} height={80} />
+              </div>
+              {Object.keys(targets).map((game) => (
+                <>
+                  <div className="flex">
+                    <Button key={game} className="text-sm bg-transparent hover:bg-transparent hover: text-black">
+                      {game}
+                    </Button>
+                  </div>
+                </>
+              ))}
+            </div>
+          </ScrollArea>
+        </div>
+      )}
       <Navbar />
       <MaxWidthWrapper>
         <form
           onSubmit={handleSubmit}
-          className="w-full h-full bg-black flex flex-col justify-center items-center mt-3"
+          className="w-full h-full flex flex-col justify-center items-center mt-3"
         >
           {imagePreview ? (
             <div className="relative">
               <Image
                 src={imagePreview}
                 alt="Selected"
-                className="rounded-t-md"
+                className="rounded-t-md flex-1 border-l border-t border-r border-black"
                 width={300}
                 height={300}
               />
-              <button
-                className="absolute top-2 left-2 text-red-500"
+              <Button
+                className="absolute top-3 flex justify-start bg-transparent hover:bg-transparent w-full"
                 type="button"
                 onClick={() => handleRemoveImage()}
               >
-                <X size={50} />
-              </button>
+                <X size={40} className="text-red-500 hover:w-12 hover:h-12" />
+              </Button>
             </div>
           ) : (
-            <div className="h-72 w-96 rounded-t-md bg-primaryBige flex justify-center items-center">
+            <div className=" h-72 w-96 rounded-t-md bg-primaryBige flex justify-center items-center border-l border-t border-r border-black">
               <Camera size={90} className="text-black" />
             </div>
           )}
 
           {/* Input for selecting image */}
-          <div>
+          <div className={`${imagePreview ? "w-[300px]" : "w-96"}`}>
             <input
               id="imageInput"
               type="file"
               onChange={handleImageChange}
               accept="image/*"
-              className="w-96 rounded-b-md bg-primaryBige"
+              className="rounded-b-md bg-primaryBige w-[100%] border-l border-b border-r border-black"
             />
           </div>
 
@@ -165,7 +197,7 @@ const Page: NextPage<Props> = ({}) => {
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="w-96 h-40 p-2 rounded-md bg-primaryBige text-black "
+              className="w-96 h-36 p-2 rounded-md bg-primaryBige text-black border border-black"
               placeholder="Enter your text here..."
             ></textarea>
           </div>
@@ -173,10 +205,10 @@ const Page: NextPage<Props> = ({}) => {
             <input
               type="tel"
               value={phonenumber}
-              pattern="[0-9]{3}-[0-9]{3}-[0-9]{2}-[0-9]{2}"
+              pattern={"[0-9]{3}-[0-9]{3} [0-9]{2} [0-9]{2}"}
               required
               onChange={(e) => setPhonenumber(e.target.value)}
-              className="w-96  p-2 rounded-md bg-primaryBige text-black "
+              className="w-96  p-2 rounded-md bg-primaryBige text-black border border-black"
               placeholder="Telefonnummer"
             ></input>
           </div>
@@ -185,7 +217,7 @@ const Page: NextPage<Props> = ({}) => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-96  p-2 rounded-md bg-primaryBige text-black "
+              className="w-96  p-2 rounded-md bg-primaryBige text-black border border-black"
               placeholder="E-mail"
             ></input>
           </div>
@@ -193,19 +225,43 @@ const Page: NextPage<Props> = ({}) => {
             <input
               value={huntingParty}
               onChange={(e) => setHuntingParty(e.target.value)}
-              className="w-96  p-2 rounded-md bg-primaryBige text-black "
+              className="w-96  p-2 rounded-md bg-primaryBige text-black border border-black"
               placeholder="Jaktlag"
             ></input>
           </div>
+          <div className="w-72 flex justify-between">
+            <div className="mt-3 h-20">
+              <Button
+                type="button"
+                className="w-32 h-20 bg-primarybg hover:bg-primarybg"
+              >
+                <CrosshairIcon
+                  size={70}
+                  className="text-primaryBige hover:w-20 hover:h-20"
+                />
+              </Button>
+            </div>
+            <div className="mt-3 h-20">
+              <Button
+                type="button"
+                className="w-32 h-20 bg-primarybg hover:bg-primarybg "
+              >
+                <MapPinnedIcon
+                  size={70}
+                  className="text-primaryBige hover:w-20 hover:h-20"
+                />
+              </Button>
+            </div>
+          </div>
 
           {content && (
-            <button
+            <Button
               type="submit"
-              className="z-50 w-40 h-12 bg-primaryBige text-white py-2 rounded-lg flex justify-center items-center"
-              disabled={!content || !image}
+              disabled={!content}
+              className="w-48 h-12 mt-3 bg-primaryBige border border-black"
             >
               <PlusIcon size={50} className="text-black" />
-            </button>
+            </Button>
           )}
         </form>
       </MaxWidthWrapper>
