@@ -20,6 +20,7 @@ import { jwtDecode } from "jwt-decode"
 import Navbar from "@/components/Navbar"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { idToken } from "@/lib/authToken"
 
 interface Props {}
 
@@ -34,16 +35,13 @@ const Page: NextPage<Props> = ({}) => {
   const [username, setUsername] = useState<string>()
   const [games, setGames] = useState<boolean>(false)
 
-  const idToken: string | null =
-    typeof localStorage !== "undefined" ? localStorage.getItem("token") : null
-
   useEffect(() => {
     if (idToken !== null) {
       const decodedtoken = jwtDecode(idToken)
       setUsername(decodedtoken.sub)
       console.log(decodedtoken.sub)
     }
-  }, [idToken])
+  }, [])
 
   // post to local database
   const { mutate, isError } = useMutation({
@@ -148,48 +146,52 @@ const Page: NextPage<Props> = ({}) => {
   return (
     <div className="w-full h-full lg:flex">
       {games && (
-        <div className="w-full h-full absolute bg-black bg-transparent/50 z-10 flex justify-center items-center">
-          <ScrollArea className="h-[70%] w-[50%] rounded-md border bg-primaryBige relative">
-            <div className="p-4 mb-">
-              <div className="flex w-full justify-center reletive mb-8">
-                <Image
-                  src={"/icons/games.svg"}
-                  alt="games"
-                  width={100}
-                  height={100}
-                />
-              </div>
-              {Object.keys(targets).map((game) => (
-                <>
-                  <div className="flex">
-                    <Button
-                      key={game}
-                      className="text-base bg-transparent hover:bg-transparent text-black"
-                    >
-                      <p className="hover:text-lg">{game}</p>
-                    </Button>
-                  </div>
-                </>
-              ))}
-            </div>
-            <div className="absolute bottom-4 w-full flex justify-center items-center h-20">
-              <Button
-                onClick={() => {
-                  setGames(!games), notAdded()
-                }}
-                className="bg-primaryGreen hover:bg-primaryGreen hover:w-44 hover:h-14 w-40 h-12 rounded-full"
-              >
-                <CheckIcon size={60} className="text-green-500" />
-              </Button>
-            </div>
-          </ScrollArea>
-        </div>
+        <div className="w-full h-full absolute bg-black bg-transparent/50 z-10"></div>
       )}
       <Navbar />
       <MaxWidthWrapper>
+        <div className="w-full h-full relative">
+        {games && (
+          <div className="w-full h-full flex justify-center items-center z-20 absolute">
+            <ScrollArea className="h-[70%] w-64 rounded-md border bg-primaryBige relative">
+              <div className="p-4">
+                <div className="flex w-full justify-center reletive mb-8">
+                  <Image
+                    src={"/icons/games.svg"}
+                    alt="games"
+                    width={100}
+                    height={100}
+                  />
+                </div>
+                {Object.keys(targets).map((game) => (
+                  <>
+                    <div className="flex">
+                      <Button
+                        key={game}
+                        className="text-base bg-transparent hover:bg-transparent text-black"
+                      >
+                        <p className="hover:text-lg">{game}</p>
+                      </Button>
+                    </div>
+                  </>
+                ))}
+              </div>
+              <div className="absolute bottom-4 w-full flex justify-center items-center h-20">
+                <Button
+                  onClick={() => {
+                    setGames(!games), notAdded()
+                  }}
+                  className="bg-primaryGreen hover:bg-primaryGreen hover:w-44 hover:h-14 w-40 h-12 rounded-full"
+                >
+                  <CheckIcon size={60} className="text-green-500" />
+                </Button>
+              </div>
+            </ScrollArea>
+          </div>
+        )}
         <form
           onSubmit={handleSubmit}
-          className="w-full h-full flex flex-col justify-center items-center mt-3"
+          className="w-full h-full flex flex-col justify-center items-center mt-3 lg:mt-5 lg:justify-start"
         >
           {imagePreview ? (
             <div className="relative">
@@ -240,7 +242,7 @@ const Page: NextPage<Props> = ({}) => {
               pattern={"[0-9]{3}-[0-9]{3} [0-9]{2} [0-9]{2}"}
               required
               onChange={(e) => setPhoneNumber(e.target.value)}
-              className="w-96  p-2 rounded-md bg-primaryBige text-black border border-black"
+              className="w-96 p-2 rounded-md bg-primaryBige text-black border border-black"
               placeholder="Telefonnummer"
             ></input>
           </div>
@@ -298,6 +300,7 @@ const Page: NextPage<Props> = ({}) => {
             </Button>
           )}
         </form>
+        </div>
       </MaxWidthWrapper>
     </div>
   )

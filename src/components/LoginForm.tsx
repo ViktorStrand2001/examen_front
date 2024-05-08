@@ -97,7 +97,7 @@ const Login: FC<LoginProps> = ({}) => {
               className={cn(
                 "text-center mt-4 py-2 px-4 rounded w-44 bg-gradient-to-r from-[#593a0e] to-green-700 hover:to-green-900 hover:from-[#593a0e] text-white"
               )} href={"/"}            >
-              Login as guest
+              Continue as guest
             </Link>
           </div>
           <div className="flex justify-center space-x-1 mt-2">

@@ -1,26 +1,35 @@
 "use client"
 import MaxWidthWrapper from "@/components/MaxWidthWrapper"
 import HamburgerMenu from "@/components/Navbar"
-import { useState, useEffect } from "react"
+import { usePostInfo } from "@/utils/hooks/usePostInformation"
 
 export default function Home() {
-  const [token, setToken] = useState<any>()
+  const { data: postData, isPending, isFetched } = usePostInfo()
 
-  // Use useEffect to retrieve token from localStorage when component mounts
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedToken = localStorage.getItem("token")
-      setToken(storedToken)
+  console.log(postData)
+
+  const pending = () => {
+    if (isPending) {
+      return <div>loading...</div>
     }
-  }, []) // Empty dependency array to run the effect only once when component mounts
+  }
 
   return (
-    <div className="z-10 bg-gray-200 w-full h-full lg:flex ">
+    <div className="z-10 w-full h-full lg:flex ">
       <HamburgerMenu />
+
       <MaxWidthWrapper>
-        <div className="">
-          <p>{token}</p>
-        </div>
+        {isPending ? (
+          pending()
+        ) : (
+          <div className="w-full h-full bg-white">
+            {postData?.data.map((post, index) => (
+              <div key={index} className="w-full h-full">
+                {post.huntingParty}
+              </div>
+            ))}
+          </div>
+        )}
       </MaxWidthWrapper>
     </div>
   )

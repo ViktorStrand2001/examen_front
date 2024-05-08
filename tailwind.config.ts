@@ -19,8 +19,8 @@ const config = {
     },
     extend: {
       backgroundImage: {
-        "moose-hero": "url('/login_background.jpg')",
-        "fireplace-hero": "url('/register_bakground.png')",
+        "moose-hero": "url('/images/login_background.jpg')",
+        "fireplace-hero": "url('/images/register_bakground.png')",
       },
       colors: {
         primarybg: "#616F39",

@@ -10,7 +10,12 @@ interface LogoProps {
   classNameSecondT?: string
 }
 
-const logo: FC<LogoProps> = ({classNameImg, classNameText, classNameFristT, classNameSecondT}) => {
+const logo: FC<LogoProps> = ({
+  classNameImg,
+  classNameText,
+  classNameFristT,
+  classNameSecondT,
+}) => {
   return (
     <div className="flex">
       <div className="flex items-center">

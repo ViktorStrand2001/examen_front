@@ -37,7 +37,7 @@ const HamburgerMenu: FC = ({}) => {
   }
 
   return (
-    <div className="w-full h-20 lg:w-60 lg:h-screen lg:flex bg-primaryGreen border-b border-black">
+    <div className="w-full h-20 lg:w-80 lg:h-screen lg:flex bg-primaryGreen border-r border-black">
       <MaxWidthWrapper className="h-full flex items-center lg:items-start">
         <div className="relative w-full flex items-center">
           <div className="lg:flex flex-col lg:h-screen lg:mt-2.5">
@@ -158,7 +158,7 @@ const HamburgerMenu: FC = ({}) => {
           </div>
         </div>
       </MaxWidthWrapper>
-      {isOpen ? (
+      {isOpen && (
         <>
           <div className="w-full h-[200px] bg-primaryGreen opacity-90 text-primaryBige absolute">
             <div className="flex justify-center items-center h-full">
@@ -223,7 +223,7 @@ const HamburgerMenu: FC = ({}) => {
             </div>
           </div>
         </>
-      ) : null}
+      )}
     </div>
   )
 }
