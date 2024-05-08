@@ -35,6 +35,9 @@ const Page: NextPage<Props> = ({}) => {
   const [username, setUsername] = useState<string>()
   const [games, setGames] = useState<boolean>(false)
 
+  const maxLength = 500;
+  const remainingCharacters = maxLength - content.length
+
   useEffect(() => {
     if (idToken !== null) {
       const decodedtoken = jwtDecode(idToken)
@@ -148,158 +151,165 @@ const Page: NextPage<Props> = ({}) => {
       {games && (
         <div className="w-full h-full absolute bg-black bg-transparent/50 z-10"></div>
       )}
+
       <Navbar />
+
       <MaxWidthWrapper>
         <div className="w-full h-full relative">
-        {games && (
-          <div className="w-full h-full flex justify-center items-center z-20 absolute">
-            <ScrollArea className="h-[70%] w-64 rounded-md border bg-primaryBige relative">
-              <div className="p-4">
-                <div className="flex w-full justify-center reletive mb-8">
-                  <Image
-                    src={"/icons/games.svg"}
-                    alt="games"
-                    width={100}
-                    height={100}
-                  />
+          {games && (
+            <div className="w-full h-full flex justify-center items-center z-20 absolute">
+              <ScrollArea className="h-[70%] w-64 rounded-md border bg-primaryBige relative">
+                <div className="p-4">
+                  <div className="flex w-full justify-center reletive mb-8">
+                    <Image
+                      src={"/icons/games.svg"}
+                      alt="games"
+                      width={100}
+                      height={100}
+                    />
+                  </div>
+                  {Object.keys(targets).map((game) => (
+                    <>
+                      <div className="flex">
+                        <Button
+                          key={game}
+                          className="text-base bg-transparent hover:bg-transparent text-black"
+                        >
+                          <p className="hover:text-lg">{game}</p>
+                        </Button>
+                      </div>
+                    </>
+                  ))}
                 </div>
-                {Object.keys(targets).map((game) => (
-                  <>
-                    <div className="flex">
-                      <Button
-                        key={game}
-                        className="text-base bg-transparent hover:bg-transparent text-black"
-                      >
-                        <p className="hover:text-lg">{game}</p>
-                      </Button>
-                    </div>
-                  </>
-                ))}
-              </div>
-              <div className="absolute bottom-4 w-full flex justify-center items-center h-20">
+                <div className="absolute bottom-4 w-full flex justify-center items-center h-20">
+                  <Button
+                    onClick={() => {
+                      setGames(!games), notAdded()
+                    }}
+                    className="bg-primaryGreen hover:bg-primaryGreen hover:w-44 hover:h-14 w-40 h-12 rounded-full"
+                  >
+                    <CheckIcon size={60} className="text-green-500" />
+                  </Button>
+                </div>
+              </ScrollArea>
+            </div>
+          )}
+          <form
+            onSubmit={handleSubmit}
+            className="w-full h-full flex flex-col justify-center items-center mt-3 lg:mt-5 lg:justify-start "
+          >
+            {imagePreview ? (
+              <div className="relative -z-10">
+                <Image
+                  src={imagePreview}
+                  alt="Selected"
+                  className=" rounded-t-md flex-1 border-l border-t border-r border-black"
+                  width={300}
+                  height={300}
+                />
                 <Button
-                  onClick={() => {
-                    setGames(!games), notAdded()
-                  }}
-                  className="bg-primaryGreen hover:bg-primaryGreen hover:w-44 hover:h-14 w-40 h-12 rounded-full"
+                  className=" z-10 absolute top-3 flex justify-start bg-transparent hover:bg-transparent w-full"
+                  type="button"
+                  onClick={() => handleRemoveImage()}
                 >
-                  <CheckIcon size={60} className="text-green-500" />
+                  <X size={40} className="text-red-500 hover:w-12 hover:h-12" />
                 </Button>
               </div>
-            </ScrollArea>
-          </div>
-        )}
-        <form
-          onSubmit={handleSubmit}
-          className="w-full h-full flex flex-col justify-center items-center mt-3 lg:mt-5 lg:justify-start"
-        >
-          {imagePreview ? (
-            <div className="relative">
-              <Image
-                src={imagePreview}
-                alt="Selected"
-                className="rounded-t-md flex-1 border-l border-t border-r border-black"
-                width={300}
-                height={300}
+            ) : (
+              <div className="-z-10 h-72 w-96 rounded-t-md bg-primaryBige flex justify-center items-center border-l border-t border-r border-black">
+                <Camera size={90} className="text-black" />
+              </div>
+            )}
+
+            {/* Input for selecting image */}
+            <div className={`${imagePreview ? "w-[300px]" : "w-96"}`}>
+              <input
+                id="imageInput"
+                type="file"
+                onChange={handleImageChange}
+                accept="image/*"
+                className="rounded-b-md bg-primaryBige w-[100%] border-l border-b border-r border-black"
               />
-              <Button
-                className="absolute top-3 flex justify-start bg-transparent hover:bg-transparent w-full"
-                type="button"
-                onClick={() => handleRemoveImage()}
-              >
-                <X size={40} className="text-red-500 hover:w-12 hover:h-12" />
-              </Button>
             </div>
-          ) : (
-            <div className=" h-72 w-96 rounded-t-md bg-primaryBige flex justify-center items-center border-l border-t border-r border-black">
-              <Camera size={90} className="text-black" />
-            </div>
-          )}
 
-          {/* Input for selecting image */}
-          <div className={`${imagePreview ? "w-[300px]" : "w-96"}`}>
-            <input
-              id="imageInput"
-              type="file"
-              onChange={handleImageChange}
-              accept="image/*"
-              className="rounded-b-md bg-primaryBige w-[100%] border-l border-b border-r border-black"
-            />
-          </div>
-
-          <div className="mt-3">
-            <textarea
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              className="w-96 h-36 p-2 rounded-md bg-primaryBige text-black border border-black"
-              placeholder="Enter your text here..."
-            ></textarea>
-          </div>
-          <div className="mt-2">
-            <input
-              type="tel"
-              value={phoneNumber}
-              pattern={"[0-9]{3}-[0-9]{3} [0-9]{2} [0-9]{2}"}
-              required
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              className="w-96 p-2 rounded-md bg-primaryBige text-black border border-black"
-              placeholder="Telefonnummer"
-            ></input>
-          </div>
-          <div className="mt-3">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-96  p-2 rounded-md bg-primaryBige text-black border border-black"
-              placeholder="E-mail"
-            ></input>
-          </div>
-          <div className="mt-3">
-            <input
-              value={huntingParty}
-              onChange={(e) => setHuntingParty(e.target.value)}
-              className="w-96  p-2 rounded-md bg-primaryBige text-black border border-black"
-              placeholder="Jaktlag"
-            ></input>
-          </div>
-          <div className="w-72 flex justify-between">
-            <div className="mt-3 h-20">
-              <Button
-                type="button"
-                onClick={() => setGames(!games)}
-                className="w-32 h-20 bg-primarybg hover:bg-primarybg"
-              >
-                <CrosshairIcon
-                  size={70}
-                  className="text-primaryBige hover:w-20 hover:h-20"
-                />
-              </Button>
+            <div className="mt-3 relative">
+              <textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                className="w-96 h-36 px-4 py-3 pb-6 rounded-md bg-primaryBige text-black border border-black"
+                placeholder="Enter your text here..."
+                maxLength={maxLength}
+              ></textarea>
+              <div className="absolute bottom-2 left-1">
+                {remainingCharacters}/{maxLength}
+              </div>
             </div>
-            <div className="mt-3 h-20">
-              <Button
-                type="button"
-                className="w-32 h-20 bg-primarybg hover:bg-primarybg "
-                onClick={notAdded}
-              >
-                <MapPinnedIcon
-                  size={70}
-                  className="text-primaryBige hover:w-20 hover:h-20"
-                />
-              </Button>
-            </div>
-          </div>
 
-          {content && (
-            <Button
-              type="submit"
-              disabled={!content}
-              className="w-48 h-12 mt-3 bg-primaryBige border border-black"
-            >
-              <PlusIcon size={50} className="text-black" />
-            </Button>
-          )}
-        </form>
+            <div className="mt-2">
+              <input
+                type="tel"
+                value={phoneNumber}
+                pattern={"[0-9]{3}-[0-9]{3} [0-9]{2} [0-9]{2}"}
+                required
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                className="w-96 p-2 rounded-md bg-primaryBige text-black border border-black"
+                placeholder="Telefonnummer"
+              ></input>
+            </div>
+            <div className="mt-3">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-96  p-2 rounded-md bg-primaryBige text-black border border-black"
+                placeholder="E-mail"
+              ></input>
+            </div>
+            <div className="mt-3">
+              <input
+                value={huntingParty}
+                onChange={(e) => setHuntingParty(e.target.value)}
+                className="w-96  p-2 rounded-md bg-primaryBige text-black border border-black"
+                placeholder="Jaktlag"
+              ></input>
+            </div>
+            <div className="w-72 flex justify-between">
+              <div className="mt-3 h-20">
+                <Button
+                  type="button"
+                  onClick={() => setGames(!games)}
+                  className="w-32 h-20 bg-primarybg hover:bg-primarybg"
+                >
+                  <CrosshairIcon
+                    size={70}
+                    className="text-primaryBige hover:w-20 hover:h-20"
+                  />
+                </Button>
+              </div>
+              <div className="mt-3 h-20">
+                <Button
+                  type="button"
+                  className="w-32 h-20 bg-primarybg hover:bg-primarybg "
+                  onClick={notAdded}
+                >
+                  <MapPinnedIcon
+                    size={70}
+                    className="text-primaryBige hover:w-20 hover:h-20"
+                  />
+                </Button>
+              </div>
+            </div>
+
+            {content && (
+              <Button
+                type="submit"
+                disabled={!content}
+                className="w-48 h-12 mt-3 bg-primaryBige border border-black"
+              >
+                <PlusIcon size={50} className="text-black" />
+              </Button>
+            )}
+          </form>
         </div>
       </MaxWidthWrapper>
     </div>

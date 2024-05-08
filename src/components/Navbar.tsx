@@ -158,9 +158,9 @@ const HamburgerMenu: FC = ({}) => {
           </div>
         </div>
       </MaxWidthWrapper>
-      {isOpen && (
+      {isOpen ? (
         <>
-          <div className="w-full h-[200px] bg-primaryGreen opacity-90 text-primaryBige absolute">
+          <div className="w-full h-[200px] bg-primaryGreen opacity-90 text-primaryBige absolute z-50">
             <div className="flex justify-center items-center h-full">
               <nav className="grid grid-cols-3 gap-10 justify-center items-center ">
                 <Link
@@ -223,7 +223,7 @@ const HamburgerMenu: FC = ({}) => {
             </div>
           </div>
         </>
-      )}
+      ) : null}
     </div>
   )
 }
