@@ -37,7 +37,7 @@ const HamburgerMenu: FC = ({}) => {
   }
 
   return (
-    <div className="w-full h-20 lg:w-60 lg:h-screen lg:flex bg-primaryGreen">
+    <div className="w-full h-20 lg:w-60 lg:h-screen lg:flex bg-primaryGreen border-b border-black">
       <MaxWidthWrapper className="h-full flex items-center lg:items-start">
         <div className="relative w-full flex items-center">
           <div className="lg:flex flex-col lg:h-screen lg:mt-2.5">

@@ -15,7 +15,7 @@ const logo: FC<LogoProps> = ({classNameImg, classNameText, classNameFristT, clas
     <div className="flex">
       <div className="flex items-center">
         <Image
-          src={"web_icon.svg"}
+          src={"/icons/web_icon.svg"}
           alt={"logo"}
           width={60}
           height={50}

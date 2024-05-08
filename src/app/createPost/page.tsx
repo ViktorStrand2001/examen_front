@@ -1,9 +1,15 @@
 "use client"
 import MaxWidthWrapper from "@/components/MaxWidthWrapper"
-import HamburgerMenu from "@/components/Navbar"
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
-import { Camera, CrosshairIcon, MapPinnedIcon, PlusIcon, X } from "lucide-react"
+import {
+  Camera,
+  CheckIcon,
+  CrosshairIcon,
+  MapPinnedIcon,
+  PlusIcon,
+  X,
+} from "lucide-react"
 import { NextPage } from "next"
 import Image from "next/image"
 import { useEffect, useState } from "react"
@@ -20,7 +26,7 @@ interface Props {}
 const Page: NextPage<Props> = ({}) => {
   const [content, setContent] = useState<string>("")
   const [email, setEmail] = useState<string>("")
-  const [phonenumber, setPhonenumber] = useState<string>("")
+  const [phoneNumber, setPhoneNumber] = useState<string>("")
   const [huntingParty, setHuntingParty] = useState<string>("")
   const [image, setImage] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
@@ -48,10 +54,13 @@ const Page: NextPage<Props> = ({}) => {
           "http://localhost:8080/create",
           {
             content,
+            huntingParty,
+            email,
+            phoneNumber,
           },
           {
             headers: {
-              Authorization: `Bearer ${idToken}`,
+              "Authorization": `Bearer ${idToken}`,
               "Content-Type": "application/json",
             },
           }
@@ -123,32 +132,55 @@ const Page: NextPage<Props> = ({}) => {
     }, 1000)
   }
 
+  const notAdded = () => {
+    alert("fiture not added!")
+  }
+
   const targets = {
     Älg: false,
-    Rådjur: false,
-    Dovhjort: false,
     Kronhjort: false,
+    Vitsvans: false,
+    Ren: false,
+    Dovhjort: false,
+    Rådjur: false,
   }
 
   return (
     <div className="w-full h-full lg:flex">
-      {!games && (
+      {games && (
         <div className="w-full h-full absolute bg-black bg-transparent/50 z-10 flex justify-center items-center">
-          <ScrollArea className="h-[81%] w-96 rounded-md border bg-primaryBige">
-            <div className="p-4">
-              <div className="flex w-full justify-center reletive mb-10">
-                <CrosshairIcon size={80} className=" absolute" />
-                <Image src={"deer.svg"} alt="viltmål" width={80} height={80} />
+          <ScrollArea className="h-[70%] w-[50%] rounded-md border bg-primaryBige relative">
+            <div className="p-4 mb-">
+              <div className="flex w-full justify-center reletive mb-8">
+                <Image
+                  src={"/icons/games.svg"}
+                  alt="games"
+                  width={100}
+                  height={100}
+                />
               </div>
               {Object.keys(targets).map((game) => (
                 <>
                   <div className="flex">
-                    <Button key={game} className="text-sm bg-transparent hover:bg-transparent hover: text-black">
-                      {game}
+                    <Button
+                      key={game}
+                      className="text-base bg-transparent hover:bg-transparent text-black"
+                    >
+                      <p className="hover:text-lg">{game}</p>
                     </Button>
                   </div>
                 </>
               ))}
+            </div>
+            <div className="absolute bottom-4 w-full flex justify-center items-center h-20">
+              <Button
+                onClick={() => {
+                  setGames(!games), notAdded()
+                }}
+                className="bg-primaryGreen hover:bg-primaryGreen hover:w-44 hover:h-14 w-40 h-12 rounded-full"
+              >
+                <CheckIcon size={60} className="text-green-500" />
+              </Button>
             </div>
           </ScrollArea>
         </div>
@@ -204,10 +236,10 @@ const Page: NextPage<Props> = ({}) => {
           <div className="mt-2">
             <input
               type="tel"
-              value={phonenumber}
+              value={phoneNumber}
               pattern={"[0-9]{3}-[0-9]{3} [0-9]{2} [0-9]{2}"}
               required
-              onChange={(e) => setPhonenumber(e.target.value)}
+              onChange={(e) => setPhoneNumber(e.target.value)}
               className="w-96  p-2 rounded-md bg-primaryBige text-black border border-black"
               placeholder="Telefonnummer"
             ></input>
@@ -233,6 +265,7 @@ const Page: NextPage<Props> = ({}) => {
             <div className="mt-3 h-20">
               <Button
                 type="button"
+                onClick={() => setGames(!games)}
                 className="w-32 h-20 bg-primarybg hover:bg-primarybg"
               >
                 <CrosshairIcon
@@ -245,6 +278,7 @@ const Page: NextPage<Props> = ({}) => {
               <Button
                 type="button"
                 className="w-32 h-20 bg-primarybg hover:bg-primarybg "
+                onClick={notAdded}
               >
                 <MapPinnedIcon
                   size={70}
