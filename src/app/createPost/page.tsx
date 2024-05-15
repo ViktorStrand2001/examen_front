@@ -21,10 +21,14 @@ import Navbar from "@/components/Navbar"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { idToken } from "@/lib/authToken"
+import { targets } from "@/types/gamesType"
 
-interface Props {}
+interface Animals {
+  name: string
+  imageUrl: string
+}
 
-const Page: NextPage<Props> = ({}) => {
+const Page: NextPage<Animals> = ({}) => {
   const [content, setContent] = useState<string>("")
   const [email, setEmail] = useState<string>("")
   const [phoneNumber, setPhoneNumber] = useState<string>("")
@@ -36,13 +40,15 @@ const Page: NextPage<Props> = ({}) => {
   const [games, setGames] = useState<boolean>(false)
   const [error, setError] = useState("")
   const [isEmailValid, setIsEmailValid] = useState(false)
+  const [animals, setAnimals] = useState<Animals[]>(targets)
+  const [SelectedAnimals, setSelectedAnimals] = useState<Animals[]>([])
 
   const maxLength = 500
   const remainingCharacters = maxLength - content.length
 
   useEffect(() => {
     if (idToken !== null) {
-      console.log(idToken);
+      console.log(idToken)
       const decodedtoken = jwtDecode(idToken)
       setUsername(decodedtoken.sub)
       console.log(decodedtoken.sub)
@@ -64,13 +70,13 @@ const Page: NextPage<Props> = ({}) => {
           },
           {
             headers: {
-              "Authorization": `Bearer ${idToken}`,
+              Authorization: `Bearer ${idToken}`,
               "Content-Type": "application/json",
             },
           }
         )
         console.log(data)
-
+        
         // Post image to firebase
         /*
         if (image) {
@@ -99,31 +105,47 @@ const Page: NextPage<Props> = ({}) => {
     },
   })
 
-    const isValidEmail = (email: string) => {
-      return /\S+@\S+\.\S+/.test(email)
+  const handleAnimalClick = (animal: Animals) => {
+    const animalIndex = SelectedAnimals.findIndex(
+      (selectedAnimal) => selectedAnimal.name === animal.name
+    )
+
+    if (animalIndex === -1) {
+      setSelectedAnimals([...SelectedAnimals, animal])
+    } else {
+      const updatedAnimals = [...SelectedAnimals]
+      updatedAnimals.splice(animalIndex, 1)
+      setSelectedAnimals(updatedAnimals)
     }
 
-   const handleEmailChange = (e: any) => {
-     const value = e.target.value
-     setEmail(value)
-     if (!isValidEmail(value)) {
-       setError("Invalid email address")
-       setIsEmailValid(false)
-     } else {
-       setError("")
-       setIsEmailValid(true)
-     }
-   }
-
-const handlePhoneNumberChange = (e: any) => {
-  const value = e.target.value
-  if (/^\d{0,10}$/.test(value)) {
-    setPhoneNumber(value)
-    setError("")
-  } else {
-    setError("Please enter a valid phone number")
+    console.log(SelectedAnimals)
   }
-}
+
+  const isValidEmail = (email: string) => {
+    return /\S+@\S+\.\S+/.test(email)
+  }
+
+  const handleEmailChange = (e: any) => {
+    const value = e.target.value
+    setEmail(value)
+    if (!isValidEmail(value)) {
+      setError("Invalid email address")
+      setIsEmailValid(false)
+    } else {
+      setError("")
+      setIsEmailValid(true)
+    }
+  }
+
+  const handlePhoneNumberChange = (e: any) => {
+    const value = e.target.value
+    if (/^\d{0,10}$/.test(value)) {
+      setPhoneNumber(value)
+      setError("")
+    } else {
+      setError("Please enter a valid phone number")
+    }
+  }
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.defaultPrevented
@@ -163,16 +185,7 @@ const handlePhoneNumberChange = (e: any) => {
   }
 
   const notAdded = () => {
-    alert("fiture not added!")
-  }
-
-  const targets = {
-    Älg: false,
-    Kronhjort: false,
-    Vitsvans: false,
-    Ren: false,
-    Dovhjort: false,
-    Rådjur: false,
+    alert("feature not added!")
   }
 
   return (
@@ -186,31 +199,43 @@ const handlePhoneNumberChange = (e: any) => {
       <MaxWidthWrapper>
         <div className="w-full h-full relative">
           {games && (
-            <div className="w-full h-full flex justify-center items-center z-20 absolute">
-              <ScrollArea className="h-[70%] w-64 rounded-md border bg-primaryBige relative">
+            <div className="w-full h-full flex justify-center items-center z-20 absolute flex-col">
+              <div className="w-64 rounded-t-md border-r border-t border-l border-black pb-5 pt-5  bg-primaryBige flex justify-center items-center">
+                <Image
+                  src={"/icons/games.svg"}
+                  alt="games"
+                  width={100}
+                  height={100}
+                />
+              </div>
+              <ScrollArea className="h-[50%] w-64 border-r border-l border-black bg-primaryBige ">
                 <div className="p-4">
-                  <div className="flex w-full justify-center reletive mb-8">
-                    <Image
-                      src={"/icons/games.svg"}
-                      alt="games"
-                      width={100}
-                      height={100}
-                    />
-                  </div>
-                  {Object.keys(targets).map((game) => (
+                  {targets.map((game, index) => (
                     <>
-                      <div className="flex">
+                      <div className="flex items-center my-3">
+                        <Image
+                          src={game.imageUrl}
+                          alt={game.name}
+                          width={50}
+                          height={50}
+                        />
                         <Button
-                          key={game}
+                          key={index}
+                          onClick={() => handleAnimalClick(game)}
                           className="text-base bg-transparent hover:bg-transparent text-black"
                         >
-                          <p className="hover:text-lg">{game}</p>
+                          <p className="hover:text-lg ">{game.name}</p>
                         </Button>
+                        {SelectedAnimals.some(
+                          (SelectedAnimal) => SelectedAnimal.name === game.name
+                        ) && <CheckIcon size={30} className="text-green-500" />}
                       </div>
                     </>
                   ))}
                 </div>
-                <div className="absolute bottom-4 w-full flex justify-center items-center h-20">
+              </ScrollArea>
+              <div className="w-64 rounded-b-md bg-primaryBige border-r border-b border-l pt-5 border-black">
+                <div className="w-full flex justify-center items-center h-20">
                   <Button
                     onClick={() => {
                       setGames(!games), notAdded()
@@ -220,7 +245,7 @@ const handlePhoneNumberChange = (e: any) => {
                     <CheckIcon size={60} className="text-green-500" />
                   </Button>
                 </div>
-              </ScrollArea>
+              </div>
             </div>
           )}
           <form
@@ -335,14 +360,19 @@ const handlePhoneNumberChange = (e: any) => {
               </div>
             </div>
 
-            {content && email && phoneNumber && huntingParty && isEmailValid && phoneNumber.length == 10 && (
-              <Button
-                type="submit"
-                className="w-48 h-12 mt-3 bg-primaryBige border border-black hover:bg-primaryBige"
-              >
-                <PlusIcon size={50} className="text-black" />
-              </Button>
-            )}
+            {content &&
+              email &&
+              phoneNumber &&
+              huntingParty &&
+              isEmailValid &&
+              phoneNumber.length == 10 && (
+                <Button
+                  type="submit"
+                  className="w-48 h-12 mt-3 bg-primaryBige border border-black hover:bg-primaryBige"
+                >
+                  <PlusIcon size={50} className="text-black" />
+                </Button>
+              )}
           </form>
         </div>
       </MaxWidthWrapper>
