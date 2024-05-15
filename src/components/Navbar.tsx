@@ -31,6 +31,7 @@ const HamburgerMenu: FC = ({}) => {
       const forceUpdate = () => updateState({})
       localStorage.removeItem("token")
       localStorage.removeItem("username")
+      localStorage.removeItem("guest")
       console.log(localStorage)
       forceUpdate()
     }
@@ -69,7 +70,7 @@ const HamburgerMenu: FC = ({}) => {
                   <>
                     <Link
                       className="flex flex-row items-center space-x-2 text-primaryBige "
-                      href={"http://localhost:3000/login"}
+                      href={"http://localhost:3000/"}
                     >
                       <LogOutIcon size={30} />
                       <p className="ml-2">Login</p>
@@ -126,7 +127,7 @@ const HamburgerMenu: FC = ({}) => {
                 </>
               ) : (
                 <>
-                  <Link href={"http://localhost:3000/login"}>
+                  <Link href={"http://localhost:3000/"}>
                     <p className="text-primaryBige ">
                       Login
                     </p>

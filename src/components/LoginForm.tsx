@@ -29,7 +29,7 @@ const Login: FC<LoginProps> = ({}) => {
       localStorage.setItem("username", username)
       console.log("Authentication successful. Token:", authToken)
       console.log(localStorage)
-      router.push("/")
+      router.push("/home")
     },
   })
 
@@ -96,7 +96,10 @@ const Login: FC<LoginProps> = ({}) => {
             <Link
               className={cn(
                 "text-center mt-4 py-2 px-4 rounded w-44 bg-gradient-to-r from-[#593a0e] to-green-700 hover:to-green-900 hover:from-[#593a0e] text-white"
-              )} href={"/"}            >
+              )}
+              href={"/home"}
+              onClick={() => localStorage.setItem("guest", "guest")}
+            >
               Continue as guest
             </Link>
           </div>
