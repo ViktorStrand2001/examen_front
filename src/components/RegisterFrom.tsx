@@ -17,7 +17,7 @@ const RegisterFrom: FC = () => {
   const { mutate, isError } = useMutation({
     mutationKey: ["registerKey"],
     mutationFn: async () => {
-      const { data } = await axios.post("http://localhost:8080/register", {
+      const { data } = await axios.post("http://localhost:8080/api/users/register", {
         username,
         password,
         email,

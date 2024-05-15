@@ -2,7 +2,7 @@ import { z } from "zod"
 
 export const PostInfoValidator = z.array(
   z.object({
-    id: z.number().nullish(),
+    id: z.string().nullish(),
     content: z.string().nullish(),
     email: z.string().nullish(),
     huntingParty: z.string().nullish(),

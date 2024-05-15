@@ -42,6 +42,7 @@ const Page: NextPage<Props> = ({}) => {
 
   useEffect(() => {
     if (idToken !== null) {
+      console.log(idToken);
       const decodedtoken = jwtDecode(idToken)
       setUsername(decodedtoken.sub)
       console.log(decodedtoken.sub)
@@ -54,7 +55,7 @@ const Page: NextPage<Props> = ({}) => {
     mutationFn: async () => {
       try {
         const { data } = await axios.post(
-          "http://localhost:8080/create",
+          "http://localhost:8080/api/posts",
           {
             content,
             huntingParty,

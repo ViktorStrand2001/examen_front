@@ -17,10 +17,13 @@ const Login: FC<LoginProps> = ({}) => {
   const { mutate, isError } = useMutation({
     mutationKey: ["registerKey"],
     mutationFn: async () => {
-      const { data } = await axios.post("http://localhost:8080/login", {
-        username,
-        password,
-      })
+      const { data } = await axios.post(
+        "http://localhost:8080/api/auth/login",
+        {
+          username,
+          password,
+        }
+      )
       return data
     },
     onSuccess: (data) => {
