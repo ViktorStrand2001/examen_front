@@ -47,7 +47,7 @@ const HamburgerMenu: FC = ({}) => {
               <nav className="flex flex-col space-y-10 reletive">
                 <Link
                   className="flex items-center flex-row space-x-2 text-primaryBige"
-                  href={"http://localhost:3000/"}
+                  href={"http://localhost:3000/home"}
                 >
                   <HomeIcon size={30} />
                   <p className="ml-2">Home</p>
@@ -119,18 +119,13 @@ const HamburgerMenu: FC = ({}) => {
               {tokenExists ? (
                 <>
                   <Link href={"http://localhost:3000/profile"}>
-                    <CircleUser
-                      size={30}
-                      className="text-primaryBige "
-                    />
+                    <CircleUser size={30} className="text-primaryBige " />
                   </Link>
                 </>
               ) : (
                 <>
                   <Link href={"http://localhost:3000/"}>
-                    <p className="text-primaryBige ">
-                      Login
-                    </p>
+                    <p className="text-primaryBige ">Login</p>
                   </Link>
                 </>
               )}
@@ -166,7 +161,7 @@ const HamburgerMenu: FC = ({}) => {
               <nav className="grid grid-cols-3 gap-10 justify-center items-center ">
                 <Link
                   className="flex items-center "
-                  href={"http://localhost:3000/"}
+                  href={"http://localhost:3000/home"}
                 >
                   <HomeIcon size={30} />
                   <p className="ml-2">Home</p>

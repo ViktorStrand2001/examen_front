@@ -34,8 +34,10 @@ const Page: NextPage<Props> = ({}) => {
   const [errorMessage, setErrorMessage] = useState<string>("")
   const [username, setUsername] = useState<string>()
   const [games, setGames] = useState<boolean>(false)
+  const [error, setError] = useState("")
+  const [isEmailValid, setIsEmailValid] = useState(false)
 
-  const maxLength = 500;
+  const maxLength = 500
   const remainingCharacters = maxLength - content.length
 
   useEffect(() => {
@@ -95,6 +97,32 @@ const Page: NextPage<Props> = ({}) => {
       setErrorMessage(error.message)
     },
   })
+
+    const isValidEmail = (email: string) => {
+      return /\S+@\S+\.\S+/.test(email)
+    }
+
+   const handleEmailChange = (e: any) => {
+     const value = e.target.value
+     setEmail(value)
+     if (!isValidEmail(value)) {
+       setError("Invalid email address")
+       setIsEmailValid(false)
+     } else {
+       setError("")
+       setIsEmailValid(true)
+     }
+   }
+
+const handlePhoneNumberChange = (e: any) => {
+  const value = e.target.value
+  if (/^\d{0,10}$/.test(value)) {
+    setPhoneNumber(value)
+    setError("")
+  } else {
+    setError("Please enter a valid phone number")
+  }
+}
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.defaultPrevented
@@ -199,7 +227,7 @@ const Page: NextPage<Props> = ({}) => {
             className="w-full h-full flex flex-col justify-center items-center mt-3 lg:mt-5 lg:justify-start "
           >
             {imagePreview ? (
-              <div className="relative -z-10">
+              <div className="relative z-10">
                 <Image
                   src={imagePreview}
                   alt="Selected"
@@ -235,8 +263,9 @@ const Page: NextPage<Props> = ({}) => {
             <div className="mt-3 relative">
               <textarea
                 value={content}
+                required
                 onChange={(e) => setContent(e.target.value)}
-                className="w-96 h-36 px-4 py-3 pb-6 rounded-md bg-primaryBige text-black border border-black"
+                className="w-96 h-36 px-4 py-3 pb-6 rounded-md bg-primaryBige text-black border border-black focus:outline-none"
                 placeholder="Enter your text here..."
                 maxLength={maxLength}
               ></textarea>
@@ -249,27 +278,32 @@ const Page: NextPage<Props> = ({}) => {
               <input
                 type="tel"
                 value={phoneNumber}
-                pattern={"[0-9]{3}-[0-9]{3} [0-9]{2} [0-9]{2}"}
                 required
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                className="w-96 p-2 rounded-md bg-primaryBige text-black border border-black"
+                onChange={handlePhoneNumberChange}
+                className={`w-96  p-2 rounded-md bg-primaryBige text-black border border-black focus:outline-none ${
+                  error && "border-red-500"
+                }`}
                 placeholder="Telefonnummer"
               ></input>
             </div>
             <div className="mt-3">
               <input
                 type="email"
+                placeholder={"E-mail"}
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-96  p-2 rounded-md bg-primaryBige text-black border border-black"
-                placeholder="E-mail"
-              ></input>
+                required
+                onChange={handleEmailChange}
+                className={`w-96  p-2 rounded-md bg-primaryBige text-black border border-black focus:outline-none ${
+                  error && "border-red-500"
+                }`}
+              />
             </div>
             <div className="mt-3">
               <input
                 value={huntingParty}
                 onChange={(e) => setHuntingParty(e.target.value)}
-                className="w-96  p-2 rounded-md bg-primaryBige text-black border border-black"
+                required
+                className="w-96  p-2 rounded-md bg-primaryBige text-black border border-black focus:outline-none"
                 placeholder="Jaktlag"
               ></input>
             </div>
@@ -300,11 +334,10 @@ const Page: NextPage<Props> = ({}) => {
               </div>
             </div>
 
-            {content && (
+            {content && email && phoneNumber && huntingParty && isEmailValid && phoneNumber.length == 10 && (
               <Button
                 type="submit"
-                disabled={!content}
-                className="w-48 h-12 mt-3 bg-primaryBige border border-black"
+                className="w-48 h-12 mt-3 bg-primaryBige border border-black hover:bg-primaryBige"
               >
                 <PlusIcon size={50} className="text-black" />
               </Button>
