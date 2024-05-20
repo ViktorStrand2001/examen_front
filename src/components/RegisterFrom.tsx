@@ -4,8 +4,7 @@ import { FC, useState } from "react"
 import Logo from "./Logo"
 import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
-import axios from "axios"
-import { useMutation } from "@tanstack/react-query"
+import { useRegisterUser } from "@/utils/hooks/useRegisterUserPost"
 
 const RegisterFrom: FC = () => {
   const [username, setUsername] = useState<string>("")
@@ -14,28 +13,23 @@ const RegisterFrom: FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>("")
   const router = useRouter()
 
-  const { mutate, isError } = useMutation({
-    mutationKey: ["registerKey"],
-    mutationFn: async () => {
-      const { data } = await axios.post("http://localhost:8080/api/users/register", {
-        username,
-        password,
-        email,
-      })
-      return data
-    },
-    onSuccess: () => {
-      router.push("/login")
-    },
-    onError: (error: Error) => {
-      setErrorMessage(error.message)
-    },
-  })
+  const { mutate: register, isError,  } = useRegisterUser()
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setErrorMessage("")
-    mutate()
+    register({ username, password, email }, 
+      {
+        onSuccess: (data) => {
+          console.log("Registration successful: ", data);
+          router.push("/")
+        },
+        onError: (error: any) => {
+          console.log("Registration failed: ", error);
+          setErrorMessage(error.message)
+        }
+      }
+    )
   }
 
   const isRegistrationDisabled = () => {

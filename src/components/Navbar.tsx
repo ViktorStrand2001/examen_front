@@ -183,7 +183,7 @@ const HamburgerMenu: FC = ({}) => {
                 {!tokenExists ? (
                   <>
                     <Link
-                      href={"http://localhost:3000/login"}
+                      href={"http://localhost:3000/"}
                       className="flex items-center "
                     >
                       <LogOutIcon size={30} />

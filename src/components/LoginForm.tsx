@@ -6,6 +6,7 @@ import Logo from "./Logo"
 import { cn } from "@/lib/utils"
 import axios from "axios"
 import { useMutation } from "@tanstack/react-query"
+import { useLoginUser } from "@/utils/hooks/useLoginUser"
 
 interface LoginProps {}
 
@@ -14,32 +15,26 @@ const Login: FC<LoginProps> = ({}) => {
   const [password, setPassword] = useState<string>("")
   const router = useRouter()
 
-  const { mutate, isError } = useMutation({
-    mutationKey: ["registerKey"],
-    mutationFn: async () => {
-      const { data } = await axios.post(
-        "http://localhost:8080/api/auth/login",
-        {
-          username,
-          password,
-        }
-      )
-      return data
-    },
-    onSuccess: (data) => {
-      const authToken = data.token
-      localStorage.setItem("token", authToken)
-      localStorage.setItem("username", username)
-      console.log("Authentication successful. Token:", authToken)
-      console.log(localStorage)
-      router.push("/home")
-    },
-  })
+  const { mutate: login, isError } = useLoginUser()
 
-    const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault()
-      mutate()
-    }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    login(
+      { username, password },
+      {
+        onSuccess: (data) => {
+          if(data && data.token){
+            const authToken = data.token
+            localStorage.setItem("token", authToken)
+            localStorage.setItem("username", username)
+            console.log("Authentication successful. Token:", authToken)
+            console.log(localStorage)
+            router.push("/home")
+          }
+        },
+      }
+    )
+  }
 
   const isRegistrationDisabled = () => {
     const isInvalidPassword = password.length < 8

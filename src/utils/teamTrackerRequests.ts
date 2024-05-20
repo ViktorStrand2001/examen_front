@@ -1,5 +1,55 @@
 import axios from "axios"
-import { PostInfoValidator } from "@/lib/validators/teamTracker"
+import {
+  LoginInfo,
+  LoginResponseValidator,
+  LoginUserValidator,
+  PostInfoValidator,
+  RegisterInfo,
+  RegisterUserValidator,
+} from "@/lib/validators/teamTracker"
+
+type Register = RegisterInfo
+type Login = LoginInfo
+
+export const postLoginUser = async (loginUser: Login) => {
+  const { data } = await axios.post(
+    "http://localhost:8080/api/auth/login",
+    loginUser,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  )
+  console.log(data)
+  const validatedUserLogin = LoginResponseValidator.safeParse(data)
+  if (!validatedUserLogin.success) {
+    console.log(validatedUserLogin.error)
+    return
+  }
+  console.log(validatedUserLogin.data)
+  return validatedUserLogin.data
+}
+
+export const postRegisterUser = async (registerUser: Register) => {
+  const { data } = await axios.post(
+    "http://localhost:8080/api/users/register",
+    registerUser,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  )
+  console.log(data)
+  const validatedUserRegister = RegisterUserValidator.safeParse(data)
+  if (!validatedUserRegister.success) {
+    console.log(validatedUserRegister.error)
+    return
+  }
+  console.log(validatedUserRegister.data)
+  return validatedUserRegister
+}
 
 export const getPostInfo = async () => {
   const { data } = await axios.get("http://localhost:8080/api/posts/all")
