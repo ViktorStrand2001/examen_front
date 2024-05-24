@@ -27,7 +27,14 @@ export const PostInfoValidator = z.array(
   })
 )
 
+export const CreatePostValidator = z.object({
+  content: z.string().nullish(),
+  huntingParty: z.string().nullish(),
+  email: z.string().nullish(),
+  phoneNumber: z.string().nullish(),
+})
 
+export type CreatePost = z.infer<typeof CreatePostValidator>
 export type LoginInfo = z.infer<typeof LoginUserValidator>
 export type RegisterInfo = z.infer<typeof RegisterUserValidator>
 export type PostInfo = z.infer<typeof PostInfoValidator>

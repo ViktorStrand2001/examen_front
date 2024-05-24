@@ -6,10 +6,14 @@ import {
   PostInfoValidator,
   RegisterInfo,
   RegisterUserValidator,
+  CreatePost,
+  CreatePostValidator,
 } from "@/lib/validators/teamTracker"
+import { idToken } from "@/lib/authToken"
 
 type Register = RegisterInfo
 type Login = LoginInfo
+type createPost = CreatePost
 
 export const postLoginUser = async (loginUser: Login) => {
   const { data } = await axios.post(
@@ -49,6 +53,27 @@ export const postRegisterUser = async (registerUser: Register) => {
   }
   console.log(validatedUserRegister.data)
   return validatedUserRegister
+}
+
+export const createPost = async (post: createPost) => {
+  const { data } = await axios.post(
+    "http://localhost:8080/api/posts",
+      post,
+    {
+      headers: {
+        "Authorization": `Bearer ${idToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  )
+  console.log(data)
+  const validatedCreatePostInfo = CreatePostValidator.safeParse(data)
+  if (!validatedCreatePostInfo.success) {
+    console.log(validatedCreatePostInfo.error)
+    return
+  }
+  console.log(validatedCreatePostInfo.data)
+  return validatedCreatePostInfo
 }
 
 export const getPostInfo = async () => {

@@ -184,7 +184,7 @@ const HamburgerMenu: FC = ({}) => {
                   <>
                     <Link
                       href={"http://localhost:3000/"}
-                      className="flex items-center "
+                      className="flex items-center"
                     >
                       <LogOutIcon size={30} />
                       <p className="ml-2">Login</p>

@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { idToken } from "@/lib/authToken"
 import { targets } from "@/types/gamesType"
+import { useCreatePost } from "@/utils/hooks/useCreatePost"
 
 interface Animals {
   name: string
@@ -55,30 +56,10 @@ const Page: NextPage<Animals> = ({}) => {
     }
   }, [])
 
-  // post to local database
-  const { mutate, isError } = useMutation({
-    mutationKey: ["registerKey"],
-    mutationFn: async () => {
-      try {
-        const { data } = await axios.post(
-          "http://localhost:8080/api/posts",
-          {
-            content,
-            huntingParty,
-            email,
-            phoneNumber,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${idToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        console.log(data)
-        
-        // Post image to firebase
-        /*
+
+  const {mutate: post, isError} = useCreatePost()
+
+  /*
         if (image) {
           const storageRef = ref(imgStorage, image.name)
           await uploadBytes(storageRef, image)
@@ -90,21 +71,7 @@ const Page: NextPage<Animals> = ({}) => {
           })          
         }
          */
-
-        return data
-      } catch (error: any) {
-        console.log(error)
-        throw new Error(error.response.data.message)
-      }
-    },
-    onSuccess: () => {
-      console.log("it worked!")
-    },
-    onError: (error: Error) => {
-      setErrorMessage(error.message)
-    },
-  })
-
+  
   const handleAnimalClick = (animal: Animals) => {
     const animalIndex = SelectedAnimals.findIndex(
       (selectedAnimal) => selectedAnimal.name === animal.name
@@ -172,11 +139,26 @@ const Page: NextPage<Animals> = ({}) => {
     }
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: any) => {
+     e.preventDefault()
     console.log("Text:", content)
+    console.log("Text:", email)
+    console.log("Text:", huntingParty)
+    console.log("Text:", phoneNumber)
     console.log("Image:", image)
 
-    mutate()
+    post(
+      { content, huntingParty, email, phoneNumber },
+      {
+        onSuccess: (data) => {
+          console.log("Creating post was successful: ", data)
+        },
+        onError: (error: any) => {
+          console.log("Creating post failed: ", error)
+          setErrorMessage(error.message)
+        },
+      }
+    )
     setTimeout(() => {
       setContent("")
       setImage(null)
